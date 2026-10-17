@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTRA AI — Daffa Master Web Command Portal</title>
+  <style>
+    :root {
+      --bg: #070B14;
+      --card: #111827;
+      --accent: #00F2FE;
+      --pink: #F43F5E;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: radial-gradient(circle at top, #1E1B4B, var(--bg) 60%); color: var(--text); min-height: 100vh; padding: 32px 20px; }
+    .container { max-width: 1160px; margin: 0 auto; }
+    .hero {
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,27,75,0.85));
+      border: 1px solid rgba(0,242,254,0.35);
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 0 40px rgba(0,242,254,0.15);
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    .badge { display: inline-block; background: rgba(0,242,254,0.15); color: var(--accent); border: 1px solid var(--accent); padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 14px; }
+    h1 { font-size: 36px; font-weight: 900; letter-spacing: 1px; margin-bottom: 10px; }
+    .sub { color: var(--muted); font-size: 16px; max-width: 760px; margin: 0 auto 24px; line-height: 1.6; }
+    .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      text-decoration: none; padding: 13px 24px; border-radius: 10px; font-weight: 800; font-size: 14px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,242,254,0.3); }
+    .btn-primary { background: linear-gradient(90deg, #00F2FE, #4FACFE); color: #050811; }
+    .btn-pink { background: linear-gradient(90deg, #F43F5E, #FB7185); color: white; }
+    .btn-dark { background: #1E293B; color: white; border: 1px solid #334155; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; margin-bottom: 36px; }
+    .card {
+      background: rgba(17,24,39,0.9); border: 1px solid #1E293B; border-radius: 14px; padding: 24px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .card h3 { font-size: 20px; margin-bottom: 10px; color: #38BDF8; }
+    .card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
+    .card img { width: 100%; height: 190px; object-fit: cover; border-radius: 10px; margin-bottom: 14px; border: 1px solid #334155; }
+    footer { text-align: center; color: var(--muted); font-size: 13px; padding-top: 20px; border-top: 1px solid #1E293B; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div class="badge">⚡ ASTRA AI PROTOCOL • KOMANDAN DAFFA</div>
+      <h1>DAFFA MASTER COMMAND PORTAL v6.0 ULTRA</h1>
+      <p class="sub">
+        Pusat kendali cloud untuk Game 3D WebGL, Simulator Ruang Angkasa, Mod Menu Unity Mono,
+        serta Portofolio Rekayasa Kemasan 3D Blender &amp; Adobe Illustrator.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="./index.html">⚔️ MAIN ASTRA 3D ACTION RPG (FIRST-PERSON)</a>
+        <a class="btn btn-pink" href="./spacex_falcon9_simulator.html">🚀 LAUNCH SPACEX FALCON 9 3D</a>
+        <a class="btn btn-dark" href="https://github.com/zordanjimbak0-art/daffa-master-astra/releases">📦 DOWNLOAD INSTALLER (.ZIP / .EXE)</a>
+        <a class="btn btn-dark" href="https://github.com/zordanjimbak0-art">👤 PROFIL GITHUB KOMANDAN</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div>
+          <h3>⚔️ 1. Astra 3D Action RPG — First-Person</h3>
+          <p>Game RPG 3D berbasis Three.js WebGL dengan tekstur PBR GitHub (Castle Brick, Cobblestone, Dungeon), animasi model .GLB (Soldier, Robot, Horse), pedang &amp; perisai 3D, serta minimap radar aktif.</p>
+        </div>
+        <a class="btn btn-primary" href="./index.html">🎮 Mainkan Sekarang di Browser</a>
+      </div>
+
+      <div class="card">
+        <div>
+          <h3>🚀 2. SpaceX Falcon 9 3D Simulator</h3>
+          <p>Simulasi peluncuran &amp; pendaratan vertikal roket Falcon 9 3D secara real-time lengkap dengan telemetri ketinggian, bahan bakar, dan kontrol gimbal mesin Merlin.</p>
+        </div>
+        <a class="btn btn-pink" href="./spacex_falcon9_simulator.html">🚀 Buka Simulator 3D</a>
+      </div>
+
+      <div class="card">
+        <div>
+          <h3>📦 3. Gudang Release &amp; Daffa Master v6.0</h3>
+          <p>Unduh paket lengkap Daffa Master GUI v6.0 Ultra (37 cover HD Steam + tema GitHub), Mod Menu My Voice Zoo (999M Gold &amp; All Animals), dan script otomasi.</p>
+        </div>
+        <a class="btn btn-dark" href="https://github.com/zordanjimbak0-art/daffa-master-astra/releases">📥 Buka Halaman Download Releases</a>
+      </div>
+
+      <div class="card">
+        <div>
+          <img src="./assets/CV_Cetak_Cup_Photorealistic_Cycles.png" alt="CV Cetak Cup 3D Cycles Render" />
+          <h3>🎨 4. 3D Packaging Blender Cycles (CV Cetak Cup)</h3>
+          <p>Render fotorealistik kemasan cup &amp; box struktural menggunakan mesin Blender Cycles dan pisau pond dieline terverifikasi Adobe Illustrator ExtendScript.</p>
+        </div>
+        <a class="btn btn-dark" href="https://github.com/zordanjimbak0-art/daffa-master-astra/tree/main/5_Blender_3D_Packaging_Pipeline">🔍 Lihat Kode &amp; Aset 3D</a>
+      </div>
+    </div>
+
+    <footer>
+      Dikembangkan oleh <strong>Komandan Muhamad Daffa Cahya</strong> (`zordanjimbak0-art`) bersama <strong>ASTRA AI Engine</strong> • Politeknik Negeri Jakarta
+    </footer>
+  </div>
+</body>
+</html>

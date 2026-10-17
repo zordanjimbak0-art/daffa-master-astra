@@ -1,0 +1,35 @@
+name: ASTRA AI Cloud Builder & Code Validator
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  validate-and-package:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate Python Syntax Across All Modules
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path . -Filter *.py -Recurse | ForEach-Object {
+            Write-Host "Checking $($_.FullName)..."
+            python -m py_compile $_.FullName
+          }
+
+      - name: Upload Ready-to-Run Portfolio Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Astra-Master-v6-Cloud-Build
+          path: |
+            1_Daffa_Master_Command_Center/
+            4_Astra_Unity_Mono_Mod_Menus/
+            5_Blender_3D_Packaging_Pipeline/
