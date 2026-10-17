@@ -775,6 +775,30 @@ class DaffaMasterApp(ctk.CTk):
         )
         self.cloud_save_pill.pack(side="left", padx=4)
 
+        # 1-Click Cyber Diagnostics Lab Button
+        self.cyber_lab_pill = ctk.CTkButton(
+            self.hud_box,
+            text="🛡️ CYBER LAB",
+            font=("Consolas", 11, "bold"),
+            fg_color="#4C0519",
+            hover_color="#881337",
+            text_color="#FDA4AF",
+            corner_radius=6,
+            width=110,
+            height=28,
+            command=self.launch_cyber_diagnostics_lab
+        )
+        self.cyber_lab_pill.pack(side="left", padx=4)
+
+    def launch_cyber_diagnostics_lab(self):
+        """Meluncurkan Astra Binary Diagnostics GUI & Web Cyber Lab."""
+        import webbrowser
+        diag_py = r"D:\Game\DAFFA_SYSTEM\Astra_Binary_Diagnostics_GUI.py"
+        if os.path.exists(diag_py):
+            subprocess.Popen([sys.executable, diag_py], cwd=r"D:\Game\DAFFA_SYSTEM", creationflags=0x08000000)
+        webbrowser.open("https://zordanjimbak0-art.github.io/daffa-master-astra/cyberlab.html")
+        self.show_toast("🛡️ ASTRA CYBER LAB", "Membuka Workbench Diagnostik Biner & Arena CTF...", duration=2500)
+
     def open_github_cloud_portal(self):
         """Membuka Web Command Portal & Repository GitHub Komandan Daffa."""
         import webbrowser
