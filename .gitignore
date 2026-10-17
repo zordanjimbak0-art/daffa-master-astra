@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+*.bak*
+*.rar
+*.zip
+*.7z
+*.mp4
+.game_profile/
