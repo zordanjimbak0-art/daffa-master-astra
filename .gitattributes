@@ -1,11 +1,10 @@
 # GitHub Linguist Polyglot Configuration — ASTRA AI Protocol
 docs/** linguist-vendored=true
-1_Daffa_Master_Command_Center/assets/** linguist-vendored=true
+1_Daffa_Master_Command_Center/** linguist-vendored=true
 2_Astra_3D_Action_RPG/** linguist-vendored=true
-3_SpaceX_Falcon9_3D_Simulator/** linguist-vendored=true
+3_SpaceX_Falcon9_3D_Simulator/spacex_falcon9_simulator.html linguist-vendored=false linguist-language=HTML
 6_Polyglot_Engineering_Core/** linguist-vendored=false linguist-documentation=false linguist-generated=false
 *.cpp linguist-language=C++
-*.hpp linguist-language=C++
 *.cs linguist-language=C#
 *.rs linguist-language=Rust
 *.go linguist-language=Go
@@ -17,4 +16,3 @@ docs/** linguist-vendored=true
 *.php linguist-language=PHP
 *.ps1 linguist-language=PowerShell
 *.sql linguist-language=TSQL
-*.ahk linguist-language=AutoHotkey
