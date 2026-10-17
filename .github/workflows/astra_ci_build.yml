@@ -36,7 +36,7 @@ jobs:
           pyinstaller --onefile --noconsole --name "MyVoiceZoo_Mod_Menu_v6" "4_Astra_Unity_Mono_Mod_Menus/MYVOICEZOO_MOD_MENU.py"
 
       - name: Upload Compiled Windows EXE & Portfolio Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Astra-Windows-EXE-And-Suite
           path: |
