@@ -745,6 +745,59 @@ class DaffaMasterApp(ctk.CTk):
         )
         self.theme_pill.pack(side="left", padx=4)
 
+        # GitHub Cloud Portal Button
+        self.github_portal_pill = ctk.CTkButton(
+            self.hud_box,
+            text="☁️ GITHUB PORTAL",
+            font=("Consolas", 11, "bold"),
+            fg_color="#064E3B",
+            hover_color="#047857",
+            text_color="#34D399",
+            corner_radius=6,
+            width=130,
+            height=28,
+            command=self.open_github_cloud_portal
+        )
+        self.github_portal_pill.pack(side="left", padx=4)
+
+        # 1-Click Cloud Save Backup Button
+        self.cloud_save_pill = ctk.CTkButton(
+            self.hud_box,
+            text="💾 CLOUD SAVE",
+            font=("Consolas", 11, "bold"),
+            fg_color="#3B0764",
+            hover_color="#581C87",
+            text_color="#F472B6",
+            corner_radius=6,
+            width=115,
+            height=28,
+            command=self.trigger_cloud_save_backup
+        )
+        self.cloud_save_pill.pack(side="left", padx=4)
+
+    def open_github_cloud_portal(self):
+        """Membuka Web Command Portal & Repository GitHub Komandan Daffa."""
+        import webbrowser
+        webbrowser.open("https://zordanjimbak0-art.github.io/daffa-master-astra/portal.html")
+        self.show_toast("☁️ GITHUB CLOUD PORTAL", "Membuka Astra Web Command Portal (zordanjimbak0-art)...", duration=2500)
+
+    def trigger_cloud_save_backup(self):
+        """Sinkronisasi otomatis Save Game ke Private GitHub Vault di background."""
+        self.show_toast("💾 CLOUD SAVE VAULT", "Mengamankan seluruh Save Game ke Private GitHub Vault...", duration=2500)
+        def _sync():
+            try:
+                bat_p = r"D:\Game\DAFFA_SYSTEM\BACKUP_SAVEGAME_KE_CLOUD.bat"
+                vault_dir = r"D:\Game\DAFFA_SAVE_VAULT"
+                if os.path.exists(vault_dir):
+                    subprocess.run(["git", "add", "."], cwd=vault_dir, creationflags=0x08000000)
+                    subprocess.run(["git", "commit", "-m", "backup: auto sync from Daffa Master GUI"], cwd=vault_dir, creationflags=0x08000000)
+                    subprocess.run(["git", "push", "origin", "main"], cwd=vault_dir, creationflags=0x08000000)
+                self.after(100, lambda: self.show_toast("✅ CLOUD BACKUP SUKSES", "Save Game aman di github.com/zordanjimbak0-art/daffa-savegame-vault!", duration=3000))
+            except Exception as e:
+                self.after(100, lambda: self.show_toast("⚠️ CLOUD SYNC INFO", f"Status: {e}", duration=2500))
+        threading.Thread(target=_sync, daemon=True).start()
+
+
     def _on_mascot_click(self):
         """Easter Egg saat avatar Among Us diklik."""
         import winsound
