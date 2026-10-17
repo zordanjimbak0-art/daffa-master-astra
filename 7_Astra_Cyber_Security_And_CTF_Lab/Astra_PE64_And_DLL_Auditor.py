@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-ASTRA AI — Portable Executable (PE64), Unity Mono DLL & Entropy Security Auditor
+ASTRA AI â€” Portable Executable (PE64), Unity Mono DLL & Entropy Security Auditor
 Author: Komandan Muhamad Daffa Cahya (zordanjimbak0-art)
 """
 import os
+import json
 import sys
 import math
 import struct
@@ -37,3 +38,4 @@ def inspect_pe_binary(file_path: str) -> dict:
 if __name__ == "__main__":
     target = sys.argv[1] if len(sys.argv) > 1 else sys.executable
     print(json.dumps(inspect_pe_binary(target), indent=2))
+
