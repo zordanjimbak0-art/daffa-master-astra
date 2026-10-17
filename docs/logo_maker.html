@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTRA — Ghidra-Style Binary Logo Generator Studio</title>
+  <style>
+    :root { --bg:#070B14; --card:#111827; --accent:#F5A623; --red:#DC241F; --text:#F8FAFC; --muted:#94A3B8; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',system-ui,sans-serif; }
+    body { background:radial-gradient(circle at top, #1F1209, var(--bg) 65%); color:var(--text); min-height:100vh; padding:28px 20px; }
+    .wrap { max-width:1080px; margin:0 auto; }
+    .panel { background:var(--card); border:1px solid #334155; border-radius:16px; padding:28px; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,0.6); }
+    h1 { font-size:28px; font-weight:900; color:var(--accent); margin-bottom:8px; }
+    p { color:var(--muted); font-size:14px; margin-bottom:22px; }
+    .controls { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-bottom:24px; text-align:left; }
+    .box { background:#1E293B; padding:14px; border-radius:10px; border:1px solid #334155; }
+    .box label { display:block; font-size:12px; font-weight:800; color:#F5A623; margin-bottom:6px; text-transform:uppercase; }
+    input[type="text"], input[type="color"], select { width:100%; padding:9px; border-radius:6px; border:1px solid #475569; background:#0F172A; color:white; font-weight:bold; }
+    .preview-box {
+      background: repeating-conic-gradient(#0F172A 0% 25%, #1E293B 0% 50%) 50% / 24px 24px;
+      border:2px solid #334155; border-radius:14px; padding:36px 20px; margin-bottom:20px; overflow-x:auto;
+    }
+    canvas { max-width:100%; height:auto; }
+    .btn { padding:12px 24px; border-radius:8px; border:none; font-weight:900; font-size:14px; cursor:pointer; text-decoration:none; display:inline-block; margin:6px; }
+    .btn-gold { background:linear-gradient(90deg,#F5A623,#DC241F); color:white; }
+    .btn-dark { background:#1E293B; color:white; border:1px solid #475569; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>🔥 PEMBUAT LOGO GAYA GHIDRA (BINARY GRADIENT MASK STUDIO)</h1>
+      <p>Ketik teks apa saja di bawah ini — sistem otomatis membentuk huruf miring berpotongan biner <code>010110</code> dengan latar belakang transparan!</p>
+
+      <div class="controls">
+        <div class="box">
+          <label>1. Ketik Teks Logo</label>
+          <input type="text" id="logoText" value="DAFFA" oninput="drawLogo()" />
+        </div>
+        <div class="box">
+          <label>2. Warna Kiri (Kuning/Emas)</label>
+          <input type="color" id="colStart" value="#F5A623" oninput="drawLogo()" />
+        </div>
+        <div class="box">
+          <label>3. Warna Kanan (Merah/Oranye)</label>
+          <input type="color" id="colEnd" value="#DC241F" oninput="drawLogo()" />
+        </div>
+      </div>
+
+      <div class="preview-box">
+        <canvas id="logoCanvas" width="960" height="260"></canvas>
+      </div>
+
+      <div>
+        <button class="btn btn-gold" onclick="downloadPNG()">📥 Download PNG Transparan</button>
+        <a class="btn btn-dark" href="./portal.html">⬅️ Kembali ke Command Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('logoCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawLogo() {
+      const text = (document.getElementById('logoText').value || 'DAFFA').toUpperCase();
+      const c1 = document.getElementById('colStart').value;
+      const c2 = document.getElementById('colEnd').value;
+
+      canvas.width = Math.max(760, text.length * 175);
+      canvas.height = 260;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Draw Slanted Heavy Text Mask
+      ctx.save();
+      ctx.transform(1, 0, -0.22, 1, 55, 0);
+      ctx.font = '900 195px "Impact", "Arial Black", sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#000';
+      ctx.fillText(text, 20, canvas.height / 2 + 8);
+      ctx.restore();
+
+      // 2. Keep only pixels inside the text (source-in)
+      ctx.globalCompositeOperation = 'source-in';
+
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      grad.addColorStop(0, c1);
+      grad.addColorStop(1, c2);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 3. Overlay Binary 010101 Matrix inside the letters (source-atop)
+      ctx.globalCompositeOperation = 'source-atop';
+      ctx.fillStyle = 'rgba(255, 240, 200, 0.24)';
+      ctx.font = 'bold 20px Consolas, monospace';
+      for (let y = 16; y < canvas.height; y += 22) {
+        let bits = '';
+        for (let i = 0; i < 120; i++) bits += ((i * 7 + y) % 3 === 0) ? '1' : '0';
+        ctx.fillText(bits, 0, y);
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function downloadPNG() {
+      const a = document.createElement('a');
+      a.download = (document.getElementById('logoText').value || 'DAFFA') + '_GHIDRA_LOGO.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    }
+
+    drawLogo();
+  </script>
+</body>
+</html>
