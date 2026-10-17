@@ -1,4 +1,4 @@
-name: ASTRA AI Cloud Builder & Code Validator
+name: ASTRA AI Cloud Builder & Standalone EXE Compiler
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate-and-package:
+  build-windows-executables:
     runs-on: windows-latest
     steps:
       - name: Checkout Repository
@@ -17,6 +17,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install PyInstaller & Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller customtkinter pillow psutil
+
       - name: Validate Python Syntax Across All Modules
         shell: pwsh
         run: |
@@ -25,11 +30,17 @@ jobs:
             python -m py_compile $_.FullName
           }
 
-      - name: Upload Ready-to-Run Portfolio Artifact
+      - name: Compile MyVoiceZoo Mod Menu Standalone EXE
+        shell: pwsh
+        run: |
+          pyinstaller --onefile --noconsole --name "MyVoiceZoo_Mod_Menu_v6" "4_Astra_Unity_Mono_Mod_Menus/MYVOICEZOO_MOD_MENU.py"
+
+      - name: Upload Compiled Windows EXE & Portfolio Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Astra-Master-v6-Cloud-Build
+          name: Astra-Windows-EXE-And-Suite
           path: |
+            dist/*.exe
             1_Daffa_Master_Command_Center/
             4_Astra_Unity_Mono_Mod_Menus/
             5_Blender_3D_Packaging_Pipeline/
