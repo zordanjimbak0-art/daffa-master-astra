@@ -1,0 +1,9 @@
+{
+  "name": "ASTRA AI \u2014 Daffa Master Command Portal",
+  "short_name": "DaffaMaster",
+  "start_url": "./portal.html",
+  "display": "standalone",
+  "background_color": "#070B14",
+  "theme_color": "#00F2FE",
+  "description": "Pusat Kendali Game 3D WebGL, Emulator Konsol, & Portofolio Komandan Daffa"
+}

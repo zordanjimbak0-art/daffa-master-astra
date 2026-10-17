@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTRA Retro & Console Web Emulator (PS1, GBA, SNES, Sega, Arcade)</title>
+  <style>
+    :root { --bg:#070B14; --card:#111827; --accent:#00F2FE; --pink:#F43F5E; --text:#F8FAFC; --muted:#94A3B8; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',system-ui,sans-serif; }
+    body { background:radial-gradient(circle at top, #1E1B4B, var(--bg) 65%); color:var(--text); min-height:100vh; padding:24px; }
+    .wrap { max-width:1100px; margin:0 auto; }
+    .top { display:flex; justify-content:space-between; align-items:center; background:var(--card); padding:18px 24px; border-radius:14px; border:1px solid #1E293B; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+    .brand { font-size:20px; font-weight:900; color:var(--accent); }
+    .btn { text-decoration:none; padding:10px 18px; border-radius:8px; font-weight:800; font-size:13px; cursor:pointer; border:none; }
+    .btn-cyan { background:linear-gradient(90deg,#00F2FE,#4FACFE); color:#050811; }
+    .btn-dark { background:#1E293B; color:white; border:1px solid #334155; }
+    .panel { background:var(--card); border:1px solid rgba(0,242,254,0.3); border-radius:16px; padding:28px; text-align:center; margin-bottom:24px; }
+    .controls-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:20px 0; text-align:left; }
+    .box { background:#1E293B; padding:14px; border-radius:10px; border:1px solid #334155; }
+    .box label { display:block; font-size:12px; color:#38BDF8; font-weight:700; margin-bottom:6px; text-transform:uppercase; }
+    select, input[type="file"] { width:100%; padding:8px; background:#0F172A; color:white; border:1px solid #475569; border-radius:6px; }
+    #game-container { width:100%; height:560px; background:#000; border-radius:14px; border:2px solid #1E293B; overflow:hidden; display:flex; align-items:center; justify-content:center; position:relative; }
+    .placeholder { color:var(--muted); font-size:15px; max-width:520px; line-height:1.6; padding:20px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">🕹️ ASTRA WEBASSEMBLY CONSOLE EMULATOR HUB</div>
+      <div>
+        <a class="btn btn-dark" href="./portal.html">⬅️ Kembali ke Command Portal</a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:8px;">Main Konsol PS1, PSP, GBA, SNES, NES, Sega &amp; N64 Langsung di Browser</h2>
+      <p style="color:var(--muted);font-size:14px;">Pilih mesin konsol di bawah, lalu masukkan file ROM (.zip, .gba, .iso, .bin, .sfc, .nes) dari PC/HP Komandan — mendukung Save State &amp; Gamepad USB/Bluetooth!</p>
+
+      <div class="controls-grid">
+        <div class="box">
+          <label>1. Pilih Mesin Konsol (Core)</label>
+          <select id="coreSelect">
+            <option value="gba">Game Boy Advance (GBA)</option>
+            <option value="psx">PlayStation 1 (PSX / PS1)</option>
+            <option value="snes">Super Nintendo (SNES)</option>
+            <option value="nes">Nintendo Entertainment System (NES)</option>
+            <option value="segaMD">Sega Mega Drive / Genesis</option>
+            <option value="n64">Nintendo 64 (N64)</option>
+            <option value="nds">Nintendo DS (NDS)</option>
+            <option value="arcade">MAME Arcade Classic</option>
+          </select>
+        </div>
+        <div class="box">
+          <label>2. Pilih File ROM Game dari Lokal</label>
+          <input type="file" id="romFile" accept=".zip,.gba,.gbc,.gb,.nes,.sfc,.smc,.bin,.iso,.cue,.md,.z64,.n64,.nds" />
+        </div>
+        <div class="box" style="display:flex;align-items:flex-end;">
+          <button class="btn btn-cyan" style="width:100%;padding:12px;" onclick="launchRom()">🚀 NYALAKAN MESIN KONSOL</button>
+        </div>
+      </div>
+
+      <div id="game-container">
+        <div class="placeholder" id="infoBox">
+          ⚡ <strong>MESIN SIAP TEMPUR</strong><br/><br/>
+          Pilih file ROM di atas lalu klik <strong>"NYALAKAN MESIN KONSOL"</strong>, atau mainkan langsung game WebGL 3D tanpa ROM:<br/><br/>
+          <a class="btn btn-cyan" href="./games/hexgl/index.html" style="display:inline-block;margin:6px;">🏎️ Main HexGL 3D</a>
+          <a class="btn btn-dark" href="./games/clumsy-bird/index.html" style="display:inline-block;margin:6px;">🐦 Main Clumsy Bird</a>
+          <a class="btn btn-dark" href="./games/2048/index.html" style="display:inline-block;margin:6px;">🔢 Main 2048</a>
+        </div>
+        <div id="game"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function launchRom() {
+      const fileInput = document.getElementById('romFile');
+      const core = document.getElementById('coreSelect').value;
+      if (!fileInput.files || !fileInput.files[0]) {
+        alert('Silakan pilih file ROM game (.gba / .nes / .sfc / .bin / .zip) terlebih dahulu, Komandan!');
+        return;
+      }
+      const file = fileInput.files[0];
+      const url = URL.createObjectURL(file);
+      document.getElementById('infoBox').style.display = 'none';
+
+      window.EJS_player = '#game';
+      window.EJS_core = core;
+      window.EJS_gameUrl = url;
+      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+      window.EJS_startOnLoaded = true;
+
+      const script = document.createElement('script');
+      script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+      document.body.appendChild(script);
+    }
+  </script>
+</body>
+</html>

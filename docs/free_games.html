@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTRA 24/7 Free Games Radar — Steam & Epic Games 100% Discount Tracker</title>
+  <style>
+    :root { --bg:#070B14; --card:#111827; --accent:#00F2FE; --green:#10B981; --text:#F8FAFC; --muted:#94A3B8; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',system-ui,sans-serif; }
+    body { background:var(--bg); color:var(--text); padding:28px 20px; }
+    .wrap { max-width:1160px; margin:0 auto; }
+    .header { display:flex; justify-content:space-between; align-items:center; background:var(--card); padding:20px 26px; border-radius:14px; border:1px solid #1E293B; margin-bottom:26px; flex-wrap:wrap; gap:12px; }
+    .title { font-size:22px; font-weight:900; color:var(--accent); }
+    .btn { text-decoration:none; padding:10px 18px; border-radius:8px; font-weight:800; font-size:13px; background:#1E293B; color:white; border:1px solid #334155; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; }
+    .card { background:var(--card); border:1px solid #1E293B; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
+    .card img { width:100%; height:165px; object-fit:cover; }
+    .body { padding:18px; }
+    .tag { display:inline-block; background:rgba(16,185,129,0.18); color:var(--green); border:1px solid var(--green); padding:3px 10px; border-radius:99px; font-size:11px; font-weight:800; margin-bottom:8px; }
+    .card h3 { font-size:17px; margin-bottom:8px; color:#F8FAFC; }
+    .card p { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:14px; }
+    .claim { display:block; text-align:center; background:linear-gradient(90deg,#10B981,#34D399); color:#04130D; text-decoration:none; padding:11px; font-weight:900; border-radius:8px; margin:0 18px 18px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <div class="title">🎁 ASTRA RADAR PEMBURU GAME GRATIS &amp; PROMO STEAM REAL-TIME</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px;">Memindai promo diskon tertinggi &amp; klaim gratis dari Steam / PC Store secara langsung</div>
+      </div>
+      <a class="btn" href="./portal.html">⬅️ Kembali ke Command Portal</a>
+    </div>
+
+    <div id="status" style="color:var(--accent);margin-bottom:18px;font-weight:700;">⏳ Memindai database Steam &amp; PC Store...</div>
+    <div class="grid" id="dealsGrid"></div>
+  </div>
+
+  <script>
+    async function loadFreeAndTopDeals() {
+      const grid = document.getElementById('dealsGrid');
+      const status = document.getElementById('status');
+      try {
+        const res = await fetch('https://www.cheapshark.com/api/1.0/deals?storeID=1&upperPrice=15&pageSize=12&sortBy=Savings');
+        const deals = await res.json();
+        status.innerText = '✅ Ditemukan ' + deals.length + ' Promo Terbaik & Diskon Ekstrem Steam Hari Ini:';
+        grid.innerHTML = deals.map(d => {
+          const pct = Math.round(parseFloat(d.savings));
+          return `
+            <div class="card">
+              <div>
+                <img src="${d.thumb}" alt="${d.title}" />
+                <div class="body">
+                  <span class="tag">🔥 DISKON -${pct}% (${d.salePrice === '0.00' ? 'GRATIS 100%' : '$' + d.salePrice})</span>
+                  <h3>${d.title}</h3>
+                  <p>Harga Normal: <s>$${d.normalPrice}</s> &rarr; Sekarang: <strong>$${d.salePrice}</strong> | Rating Steam: ${d.steamRatingPercent}%</p>
+                </div>
+              </div>
+              <a class="claim" href="https://www.cheapshark.com/redirect?dealID=${d.dealID}" target="_blank">🎁 Buka di Steam Store</a>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        status.innerText = '⚠️ Gagal memuat API eksternal, silakan cek koneksi internet.';
+      }
+    }
+    loadFreeAndTopDeals();
+  </script>
+</body>
+</html>
