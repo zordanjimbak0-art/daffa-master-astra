@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTRA Cyber Security, Reverse Engineering & CTF Wargame Lab</title>
+  <style>
+    :root {
+      --bg: #04070D;
+      --panel: #0B1320;
+      --neon: #00FF9D;
+      --cyan: #00F2FE;
+      --red: #FF2A6D;
+      --text: #E2F1FF;
+      --muted: #7C96B2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Consolas', 'Courier New', monospace; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; position: relative; overflow-x: hidden; }
+    canvas#matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.14; pointer-events: none; }
+    .wrap { max-width: 1240px; margin: 0 auto; position: relative; z-index: 2; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center; background: rgba(11,19,32,0.92);
+      border: 1px solid var(--neon); border-radius: 12px; padding: 16px 24px; margin-bottom: 22px;
+      box-shadow: 0 0 25px rgba(0,255,157,0.18); flex-wrap: wrap; gap: 12px;
+    }
+    .brand { font-size: 20px; font-weight: 900; color: var(--neon); letter-spacing: 1.5px; }
+    .score-pill { background: rgba(0,255,157,0.15); border: 1px solid var(--neon); color: var(--neon); padding: 8px 16px; border-radius: 99px; font-weight: bold; font-size: 13px; }
+    .btn {
+      background: var(--neon); color: #03140B; border: none; padding: 9px 16px; border-radius: 6px;
+      font-weight: 900; cursor: pointer; text-decoration: none; font-size: 13px; display: inline-block;
+    }
+    .btn-cyan { background: var(--cyan); color: #031018; }
+    .btn-red { background: var(--red); color: white; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 22px; }
+    @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: rgba(11,19,32,0.92); border: 1px solid #1E3A5F; border-radius: 12px; padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .card h2 { font-size: 16px; color: var(--cyan); margin-bottom: 10px; border-bottom: 1px solid #1E3A5F; padding-bottom: 8px; }
+    .desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    textarea, input[type="text"] {
+      width: 100%; background: #050911; color: var(--neon); border: 1px solid #1E3A5F;
+      border-radius: 6px; padding: 10px; font-size: 13px; margin-bottom: 10px;
+    }
+    .terminal-out {
+      background: #02050A; border: 1px solid #162C46; border-radius: 8px; padding: 12px;
+      height: 210px; overflow-y: auto; font-size: 12px; color: #00FF9D; white-space: pre-wrap; margin-bottom: 10px;
+    }
+    .ctf-box { display: flex; flex-direction: column; gap: 10px; }
+    .ctf-item { background: #070E1A; border: 1px solid #1B3252; padding: 12px; border-radius: 8px; }
+    .ctf-item h4 { color: #F8FAFC; font-size: 13px; margin-bottom: 4px; }
+    .ctf-item p { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">💀 ASTRA CYBER SECURITY, REVERSING &amp; CTF WARGAME RANGE</div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <div class="score-pill" id="ctfScore">🚩 CTF FLAGS: 0 / 4 CAPTURED</div>
+        <a class="btn btn-cyan" href="./portal.html">⬅️ Command Portal</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- MODULE 1: INTERACTIVE PENTEST & REVERSING TERMINAL -->
+      <div class="card">
+        <h2>💻 1. ASTRA Tactical Reverse-Engineering &amp; Pentest Terminal</h2>
+        <div class="desc">Ketik perintah: <code>help</code>, <code>scan-ports</code>, <code>aob-scan</code>, <code>pe-dump</code>, <code>decrypt-save</code>, <code>jwt-audit</code>, atau <code>clear</code>.</div>
+        <div class="terminal-out" id="termOut">[ASTRA KERNEL v6.5 INITIALIZED — AUTHORIZED OPERATOR: KOMANDAN DAFFA]
+Ketik 'help' lalu tekan ENTER untuk melihat daftar modul rekayasa balik & audit keamanan...
+</div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="termInput" placeholder="root@astra-rig:~# ketik perintah (contoh: aob-scan)..." onkeydown="if(event.key==='Enter')runTermCmd()" style="margin-bottom:0;" />
+          <button class="btn" onclick="runTermCmd()">EXEC</button>
+        </div>
+      </div>
+
+      <!-- MODULE 2: LIVE AOB MEMORY SCANNER & ASSEMBLY OPCODE PATCHER -->
+      <div class="card">
+        <h2>🔍 2. Live x64 Memory Hex Dump &amp; AOB Opcode Patcher</h2>
+        <div class="desc">Simulasi pemindaian memori runtime Unity Mono (`Assembly-CSharp.dll` / `GameAssembly.dll`) dan injeksi instruksi `NOP (0x90)` / `MOV EAX, 999999`.</div>
+        <div class="terminal-out" id="hexDump" style="color:#38BDF8;height:155px;">0x7FF6A1B01000 | 48 89 5C 24 08 57 48 83 EC 20 48 8B D9 8B 49 18 | H.\$.WH.. H...I. (Wallet::SpendGold)
+0x7FF6A1B01010 | 2B C2 89 43 18 48 8B 5C 24 30 48 83 C4 20 5F C3 | +..C.H.\$0H.. _. (SUB EAX, EDX -> MOV [RBX+18], EAX)
+0x7FF6A1B01020 | 48 8B 05 A1 44 12 01 48 85 C0 74 0E 8B 40 24 C3 | H...D..H..t..@$. (AnimalManager::GetUnlockMask)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn" onclick="patchMemory('nop')">💉 Patch SUB -> NOP (Infinite Gold)</button>
+          <button class="btn btn-cyan" onclick="patchMemory('mov')">⚡ Inject MOV EAX, 999999999</button>
+          <button class="btn btn-red" onclick="patchMemory('reset')">🔄 Restore Original Bytes</button>
+        </div>
+      </div>
+
+      <!-- MODULE 3: XOR SAVE DECRYPTOR, JWT & THREAT INTEL DE-OBFUSCATOR -->
+      <div class="card">
+        <h2>🔐 3. Cryptography, XOR Save Unlocker &amp; Threat Intel Auditor</h2>
+        <div class="desc">Dekripsi payload XOR Save Game, decode token autentikasi JWT, atau analisis skrip Base64/PowerShell mencurigakan.</div>
+        <textarea id="cryptoInput" rows="3" placeholder="Masukkan teks, Hex, Base64, atau JWT Token di sini...">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiS29tYW5kYW5fRGFmZmEiLCJyb2xlIjoiQVNUUkFfUk9PVF9BRE1JTiIsImNsZWFyYW5jZSI6IlVOTElNSVRFRCJ9.signature</textarea>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          <button class="btn" onclick="cryptoAction('jwt')">🔓 Decode JWT Token</button>
+          <button class="btn btn-cyan" onclick="cryptoAction('b64')">📦 Base64 Decode/Encode</button>
+          <button class="btn" onclick="cryptoAction('xor')">🗝️ XOR Save Cipher</button>
+          <button class="btn btn-red" onclick="cryptoAction('audit')">🛡️ Threat Intel Audit</button>
+        </div>
+        <div class="terminal-out" id="cryptoOut" style="height:105px;">Hasil analisis kriptografi akan tampil di sini...</div>
+      </div>
+
+      <!-- MODULE 4: CAPTURE THE FLAG (CTF) WARGAME ARENA -->
+      <div class="card">
+        <h2>🚩 4. ASTRA Capture-The-Flag (CTF) Wargame Arena</h2>
+        <div class="desc">Pecahkan 4 tantangan Reverse Engineering &amp; Keamanan Siber di bawah ini untuk meraih skor penuh!</div>
+        <div class="ctf-box">
+          <div class="ctf-item">
+            <h4>Challenge #1 — Hex ASCII Reversing (100 Pts)</h4>
+            <p>Ubah byte Hex ini menjadi teks ASCII: <code>41 53 54 52 41 5F 50 57 4E</code></p>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="flag1" placeholder="Ketik hasil ASCII..." style="margin:0;" />
+              <button class="btn" onclick="checkFlag(1, 'ASTRA_PWN')">SUBMIT</button>
+            </div>
+          </div>
+          <div class="ctf-item">
+            <h4>Challenge #2 — x64 Assembly Opcode Knowledge (150 Pts)</h4>
+            <p>Berapa nilai byte heksadesimal (2 digit) untuk instruksi <code>NOP</code> (No Operation) pada arsitektur x86/x64?</p>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="flag2" placeholder="Contoh: 90" style="margin:0;" />
+              <button class="btn" onclick="checkFlag(2, '90')">SUBMIT</button>
+            </div>
+          </div>
+          <div class="ctf-item">
+            <h4>Challenge #3 — Base64 Secret Flag (200 Pts)</h4>
+            <p>Decode Base64 ini di panel sebelah kiri: <code>RkxBR3tEQVZGQV9NQVNURVJfVjZ9</code></p>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="flag3" placeholder="Masukkan FLAG{...}" style="margin:0;" />
+              <button class="btn" onclick="checkFlag(3, 'FLAG{DAFFA_MASTER_V6}')">SUBMIT</button>
+            </div>
+          </div>
+          <div class="ctf-item">
+            <h4>Challenge #4 — Memory Patch Flag (250 Pts)</h4>
+            <p>Klik tombol <strong>"Patch SUB -> NOP"</strong> pada Panel #2 di atas untuk mengekstrak Flag ke-4 dari memori!</p>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="flag4" placeholder="Masukkan FLAG{...}" style="margin:0;" />
+              <button class="btn" onclick="checkFlag(4, 'FLAG{RING0_MEMORY_GOD}')">SUBMIT</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Matrix Rain Background
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const chars = '0123456789ABCDEF<>[]/$#@!ASTRA_DAFFA';
+    const drops = Array(Math.floor(canvas.width / 16)).fill(1);
+    setInterval(() => {
+      ctx.fillStyle = 'rgba(4, 7, 13, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00FF9D';
+      ctx.font = '14px monospace';
+      drops.forEach((y, i) => {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * 16, y * 16);
+        if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      });
+    }, 45);
+
+    // Terminal Emulator
+    function runTermCmd() {
+      const inp = document.getElementById('termInput');
+      const out = document.getElementById('termOut');
+      const cmd = inp.value.trim().toLowerCase();
+      if (!cmd) return;
+      out.innerText += `\nroot@astra-rig:~# ${cmd}\n`;
+      inp.value = '';
+
+      if (cmd === 'help') {
+        out.innerText +=
+          `  scan-ports    : Audit port jaringan lokal & layanan aktif\n` +
+          `  aob-scan      : Pindai signature Array-of-Bytes di memori proses\n` +
+          `  pe-dump       : Inspeksi header PE64 (.exe / Assembly-CSharp.dll)\n` +
+          `  decrypt-save  : Dekripsi kunci XOR save.json MyVoiceZoo\n` +
+          `  jwt-audit     : Analisis struktur privilege token JWT\n` +
+          `  clear         : Bersihkan layar terminal\n`;
+      } else if (cmd === 'scan-ports') {
+        out.innerText +=
+          `[ASTRA NET AUDIT] Scanning localhost (127.0.0.1)...\n` +
+          `  PORT 8888/tcp  OPEN  Astra Cockpit Mobile Stream-Deck\n` +
+          `  PORT 11434/tcp OPEN  Ollama Local AI Inference Server\n` +
+          `  PORT 5037/tcp  OPEN  ADB Bridge (Samsung Galaxy A16 RR8XC026JND)\n`;
+      } else if (cmd === 'aob-scan') {
+        out.innerText +=
+          `[ASTRA AOB ENGINE] Scanning pattern: 48 8B D9 8B 49 18 2B C2...\n` +
+          `  MATCH #1 -> 0x7FF6A1B0100D (Module: GameAssembly.dll + 0x1B0100D)\n` +
+          `  Status   -> Ready for NOP / Trampoline Code-Cave Injection\n`;
+      } else if (cmd === 'pe-dump') {
+        out.innerText +=
+          `[PE64 HEADER INSPECTOR]\n` +
+          `  Magic        : 0x5A4D (MZ) / 0x00004550 (PE00)\n` +
+          `  Architecture : IMAGE_FILE_MACHINE_AMD64 (0x8664)\n` +
+          `  Sections     : .text (RX), .rdata (R), .data (RW), .il2cpp (RX)\n` +
+          `  CLR Runtime  : Unity Mono v4.0.30319 (Assembly-CSharp.dll Verified)\n`;
+      } else if (cmd === 'decrypt-save') {
+        out.innerText +=
+          `[XOR SAVE UNLOCKER] Extracted XOR Key: "sdhfioshdio@#%#@%@$@dgfi!~@$#joash"\n` +
+          `  Decrypted Payload: {"gold": 999999999, "unlockedAnimals": 30, "godMode": true}\n`;
+      } else if (cmd === 'jwt-audit') {
+        out.innerText +=
+          `[JWT AUDITOR] Algorithm: HS256 | Role: ASTRA_ROOT_ADMIN | Status: VALID\n`;
+      } else if (cmd === 'clear') {
+        out.innerText = '';
+      } else {
+        out.innerText += `Perintah '${cmd}' tidak dikenali. Ketik 'help' untuk daftar komando.\n`;
+      }
+      out.scrollTop = out.scrollHeight;
+    }
+
+    // Memory Patcher
+    function patchMemory(mode) {
+      const box = document.getElementById('hexDump');
+      if (mode === 'nop') {
+        box.innerText =
+          `0x7FF6A1B01000 | 48 89 5C 24 08 57 48 83 EC 20 48 8B D9 8B 49 18 | H.\$.WH.. H...I. (Wallet::SpendGold)\n` +
+          `0x7FF6A1B01010 | 90 90 89 43 18 48 8B 5C 24 30 48 83 C4 20 5F C3 | [PATCHED: NOP NOP -> INFINITE GOLD!]\n` +
+          `0x7FF6A1B01020 | 🚩 MEMORY FLAG UNLOCKED: FLAG{RING0_MEMORY_GOD}`;
+      } else if (mode === 'mov') {
+        box.innerText =
+          `0x7FF6A1B01000 | B8 FF C9 9A 3B 89 41 18 C3 90 90 90 90 90 90 90 | [INJECTED: MOV EAX, 999999999 -> RET]\n` +
+          `0x7FF6A1B01010 | 2B C2 89 43 18 48 8B 5C 24 30 48 83 C4 20 5F C3 | Wallet Balance Locked at 999,999,999!`;
+      } else {
+        box.innerText =
+          `0x7FF6A1B01000 | 48 89 5C 24 08 57 48 83 EC 20 48 8B D9 8B 49 18 | H.\$.WH.. H...I. (Wallet::SpendGold)\n` +
+          `0x7FF6A1B01010 | 2B C2 89 43 18 48 8B 5C 24 30 48 83 C4 20 5F C3 | +..C.H.\$0H.. _. (Original Bytes Restored)\n` +
+          `0x7FF6A1B01020 | 48 8B 05 A1 44 12 01 48 85 C0 74 0E 8B 40 24 C3 | H...D..H..t..@$. (AnimalManager::GetUnlockMask)`;
+      }
+    }
+
+    // Crypto Workbench
+    function cryptoAction(type) {
+      const val = document.getElementById('cryptoInput').value.trim();
+      const out = document.getElementById('cryptoOut');
+      try {
+        if (type === 'jwt') {
+          const parts = val.split('.');
+          if (parts.length < 2) throw new Error('Format JWT tidak valid');
+          const header = atob(parts[0]);
+          const payload = atob(parts[1]);
+          out.innerText = `[JWT HEADER]  : ${header}\n[JWT PAYLOAD] : ${payload}`;
+        } else if (type === 'b64') {
+          try {
+            out.innerText = `[BASE64 DECODED] : ${atob(val)}`;
+          } catch {
+            out.innerText = `[BASE64 ENCODED] : ${btoa(val)}`;
+          }
+        } else if (type === 'xor') {
+          const key = 'ASTRA';
+          let res = [];
+          for (let i = 0; i < val.length; i++) {
+            res.push((val.charCodeAt(i) ^ key.charCodeAt(i % key.length)).toString(16).padStart(2, '0'));
+          }
+          out.innerText = `[XOR HEX OUTPUT (Key='ASTRA')] :\n` + res.join(' ').toUpperCase();
+        } else if (type === 'audit') {
+          const lower = val.toLowerCase();
+          const risky = ['iex', 'invoke-expression', 'downloadstring', 'frombase64string', '-enc', 'bypass'];
+          const hits = risky.filter(k => lower.includes(k));
+          out.innerText = hits.length
+            ? `⚠️ [THREAT INTEL ALERT] Terdeteksi indikator eksekusi berisiko: ${hits.join(', ')}`
+            : `✅ [THREAT INTEL CLEAN] Tidak ditemukan pola dropper / obfuscation berbahaya.`;
+        }
+      } catch (e) {
+        out.innerText = `⚠️ Error pemrosesan: ${e.message}`;
+      }
+    }
+
+    // CTF Checker
+    let solved = new Set();
+    function checkFlag(num, expected) {
+      const val = document.getElementById('flag' + num).value.trim().toUpperCase();
+      if (val === expected.toUpperCase()) {
+        solved.add(num);
+        document.getElementById('ctfScore').innerText = `🚩 CTF FLAGS: ${solved.size} / 4 CAPTURED`;
+        alert(`🎉 MANTAP KOMANDAN! Challenge #${num} Berhasil Dipecahkan! (${solved.size}/4 Flags)`);
+      } else {
+        alert('❌ Flag belum tepat, coba cek petunjuknya lagi Komandan!');
+      }
+    }
+  </script>
+</body>
+</html>
